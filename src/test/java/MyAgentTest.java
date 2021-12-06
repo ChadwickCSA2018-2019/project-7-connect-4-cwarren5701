@@ -100,18 +100,18 @@ public class MyAgentTest {
 		MyAgent redAgent = new MyAgent(game, true);
 		MyAgent yellowAgent = new MyAgent(game, false);
 		game.clearBoard();
-		redAgent.moveOnColumn(7);
-		for (int i = 0; i < 2; i++) {
+		redAgent.moveOnColumn(6);
+		for (int i = 0; i < 3; i += 2) {
 			yellowAgent.moveOnColumn(i + 1);
 			redAgent.moveOnColumn(i + 2);
 		}
 		yellowAgent.moveOnColumn(5);
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 3; i += 2) {
 			redAgent.moveOnColumn(i + 1);
-			yellowAgent.moveOnColumn(+2);
+			yellowAgent.moveOnColumn(i + 2);
 		}
 		redAgent.moveOnColumn(5);
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 3; i+=2) {
 			yellowAgent.moveOnColumn(i + 1);
 			redAgent.moveOnColumn(i + 2);
 		}

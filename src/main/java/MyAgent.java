@@ -85,40 +85,46 @@ public class MyAgent extends Agent {
 	private boolean checkForTwo(int columnNum) {
 		Connect4Column currColumn = myGame.getColumn(columnNum);
 		int slotToBeFilledNum = getLowestEmptyIndex(currColumn);
-		Connect4Slot slotToBeFilled = currColumn.getSlot(slotToBeFilledNum);
-		boolean color = slotToBeFilled.getIsRed();
-		// check two to the left and see if they are the same color
-		if (columnNum >= 2) {
-			Connect4Column columnLeft = myGame.getColumn(columnNum - 1);
-			Connect4Slot slotToLeft = columnLeft.getSlot(slotToBeFilledNum);
-			Connect4Column columnLeft2 = myGame.getColumn(columnNum - 2);
-			Connect4Slot slotToLeft2 = columnLeft2.getSlot(slotToBeFilledNum);
-			if (!slotToLeft.getIsFilled() || !slotToLeft2.getIsFilled()) {
-				return false;
-			} else {
-				if ((color != slotToLeft.getIsRed()) || (color != slotToLeft2.getIsRed())) {
+		if (slotToBeFilledNum == -1) {
+			return false;
+		} else {
+			boolean color = this.iAmRed;
+			// check two to the left and see if they are the same color
+			if (columnNum >= 2) {
+				Connect4Column columnLeft = myGame.getColumn(columnNum - 1);
+				Connect4Slot slotToLeft = columnLeft.getSlot(slotToBeFilledNum);
+				Connect4Column columnLeft2 = myGame.getColumn(columnNum - 2);
+				Connect4Slot slotToLeft2 = columnLeft2.getSlot(slotToBeFilledNum);
+				// System.out.println("cl " + columnLeft2);
+				// System.out.println("sl " + slotToLeft2);
+				// System.out.println("stbf " + slotToBeFilledNum);
+				if (!slotToLeft.getIsFilled() || !slotToLeft2.getIsFilled()) {
 					return false;
 				} else {
-					return true;
+					if ((color != slotToLeft.getIsRed()) || (color != slotToLeft2.getIsRed())) {
+						return false;
+					} else {
+						return true;
+					}
 				}
-			}
-			// check two to the right and see if they are the same color
-		} else if (columnNum <= 4) {
-			Connect4Column columnRight = myGame.getColumn(columnNum + 1);
-			Connect4Slot slotToRight = columnRight.getSlot(slotToBeFilledNum);
-			Connect4Column columnRight2 = myGame.getColumn(columnNum + 2);
-			Connect4Slot slotToRight2 = columnRight2.getSlot(slotToBeFilledNum);
-			if (!slotToRight.getIsFilled() || !slotToRight2.getIsFilled()) {
-				return false;
-			} else {
-				if ((color != slotToRight.getIsRed()) || (color != slotToRight2.getIsRed())) {
+				// check two to the right and see if they are the same color
+			} else if (columnNum <= 4) {
+				Connect4Column columnRight = myGame.getColumn(columnNum + 1);
+				Connect4Slot slotToRight = columnRight.getSlot(slotToBeFilledNum);
+				Connect4Column columnRight2 = myGame.getColumn(columnNum + 2);
+				Connect4Slot slotToRight2 = columnRight2.getSlot(slotToBeFilledNum);
+				if (!slotToRight.getIsFilled() || !slotToRight2.getIsFilled()) {
 					return false;
 				} else {
-					return true;
+					if ((color != slotToRight.getIsRed()) || (color != slotToRight2.getIsRed())) {
+						return false;
+					} else {
+						return true;
+					}
 				}
 			}
+			return false;
 		}
-		return false;
 	}
 
 	private int getHighestFilledRed(int columnNum) {

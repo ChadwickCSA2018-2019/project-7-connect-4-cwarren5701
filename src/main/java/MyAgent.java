@@ -12,6 +12,8 @@ public class MyAgent extends Agent {
 	 */
 	private Random random;
 
+	private int moveNumber;
+
 	/**
 	 * Constructs a new agent, giving it the game and telling it whether it is Red
 	 * or Yellow.
@@ -22,6 +24,7 @@ public class MyAgent extends Agent {
 	public MyAgent(Connect4Game game, boolean iAmRed) {
 		super(game, iAmRed);
 		random = new Random();
+		moveNumber = 0;
 	}
 
 	/**
@@ -55,8 +58,79 @@ public class MyAgent extends Agent {
 		} else if (theyCanWin() != -1) {
 			moveOnColumn(theyCanWin());
 		} else {
-			moveOnColumn(randomMove());
+			// my first move
+			if (moveNumber < 2) {
+				moveOnColumn(3);
+			} else {
+				if (findTwo() != -1) {
+					moveOnColumn(findTwo());
+				} else {
+					moveOnColumn(randomMove());
+				}
+			}
 		}
+		moveNumber++;
+	}
+
+	private int findTwo() {
+		for (int i = 0; i < myGame.getColumnCount(); i++) {
+			if (checkForTwo(i)) {
+				return i;
+			}
+		}
+		return -1;
+
+	}
+
+	private boolean checkForTwo(int columnNum) {
+		Connect4Column currColumn = myGame.getColumn(columnNum);
+		int slotToBeFilledNum = getLowestEmptyIndex(currColumn);
+		Connect4Slot slotToBeFilled = currColumn.getSlot(slotToBeFilledNum);
+		boolean color = slotToBeFilled.getIsRed();
+		// check two to the left and see if they are the same color
+		if (columnNum >= 2) {
+			Connect4Column columnLeft = myGame.getColumn(columnNum - 1);
+			Connect4Slot slotToLeft = columnLeft.getSlot(slotToBeFilledNum);
+			Connect4Column columnLeft2 = myGame.getColumn(columnNum - 2);
+			Connect4Slot slotToLeft2 = columnLeft2.getSlot(slotToBeFilledNum);
+			if (!slotToLeft.getIsFilled() || !slotToLeft2.getIsFilled()) {
+				return false;
+			} else {
+				if ((color != slotToLeft.getIsRed()) || (color != slotToLeft2.getIsRed())) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+			// check two to the right and see if they are the same color
+		} else if (columnNum <= 4) {
+			Connect4Column columnRight = myGame.getColumn(columnNum + 1);
+			Connect4Slot slotToRight = columnRight.getSlot(slotToBeFilledNum);
+			Connect4Column columnRight2 = myGame.getColumn(columnNum + 2);
+			Connect4Slot slotToRight2 = columnRight2.getSlot(slotToBeFilledNum);
+			if (!slotToRight.getIsFilled() || !slotToRight2.getIsFilled()) {
+				return false;
+			} else {
+				if ((color != slotToRight.getIsRed()) || (color != slotToRight2.getIsRed())) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private int getHighestFilledRed(int columnNum) {
+		Connect4Column column = myGame.getColumn(columnNum);
+		for (int i = 0; i < column.getRowCount(); i++) {
+			Connect4Slot currSlot = column.getSlot(i);
+			if (currSlot.getIsFilled() && currSlot.getIsRed()) {
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	/**
@@ -152,14 +226,14 @@ public class MyAgent extends Agent {
 	 * @return the column that would allow the opponent to win.
 	 */
 	public int theyCanWin() {
-		//check to see if they can win in the next move
-		for(int i = 0; i < myGame.getColumnCount(); i++) {
-			//create copy of the game 
+		// check to see if they can win in the next move
+		for (int i = 0; i < myGame.getColumnCount(); i++) {
+			// create copy of the game
 			Connect4Game copyGame = new Connect4Game(myGame);
 			MyAgent copyAgent = new MyAgent(copyGame, !iAmRed);
-			if(!copyGame.getColumn(i).getIsFull()) {
+			if (!copyGame.getColumn(i).getIsFull()) {
 				copyAgent.moveOnColumn(i);
-				if((copyGame.gameWon() == 'R' && !iAmRed) || (copyGame.gameWon() == 'Y' && iAmRed)) {
+				if ((copyGame.gameWon() == 'R' && !iAmRed) || (copyGame.gameWon() == 'Y' && iAmRed)) {
 					return i;
 				}
 			}

@@ -111,7 +111,7 @@ public class MyAgentTest {
 			yellowAgent.moveOnColumn(i + 2);
 		}
 		redAgent.moveOnColumn(5);
-		for (int i = 0; i < 3; i+=2) {
+		for (int i = 0; i < 3; i += 2) {
 			yellowAgent.moveOnColumn(i + 1);
 			redAgent.moveOnColumn(i + 2);
 		}
@@ -153,22 +153,17 @@ public class MyAgentTest {
 		MyAgent redAgent = new MyAgent(game, true);
 		MyAgent yellowAgent = new MyAgent(game, false);
 		game.clearBoard();
-		for (int i = 0; i < 2; i++) {
-			redAgent.moveOnColumn(i + 1);
-			yellowAgent.moveOnColumn(i + 2);
-		}
-		redAgent.moveOnColumn(5);
-		for (int i = 0; i < 2; i++) {
-			yellowAgent.moveOnColumn(i + 1);
-			redAgent.moveOnColumn(i + 2);
-		}
-		yellowAgent.moveOnColumn(5);
-		for (int i = 0; i < 2; i++) {
-			redAgent.moveOnColumn(i + 1);
-			yellowAgent.moveOnColumn(i + 2);
-		}
-		redAgent.moveOnColumn(5);
-		assertEquals(1, redAgent.theyCanWin());
+		redAgent.moveOnColumn(0);
+		yellowAgent.moveOnColumn(1);
+		redAgent.moveOnColumn(1);
+		yellowAgent.moveOnColumn(2);
+		redAgent.moveOnColumn(3);
+		yellowAgent.moveOnColumn(2);
+		redAgent.moveOnColumn(2);
+		yellowAgent.moveOnColumn(3);
+		redAgent.moveOnColumn(0);
+		yellowAgent.moveOnColumn(3);
+		assertEquals(3, redAgent.iCanWin());
 
 	}
 

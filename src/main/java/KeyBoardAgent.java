@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Describe your basic strategy here.
@@ -6,12 +7,12 @@ import java.util.Random;
  * @author <your Github username>
  *
  */
-public class MyAgent extends Agent {
+public class KeyBoardAgent extends Agent {
 	/**
 	 * A random number generator to randomly decide where to place a token.
 	 */
 	private Random random;
-
+	private Scanner scanner;
 	private int moveNumber;
 
 	/**
@@ -21,9 +22,11 @@ public class MyAgent extends Agent {
 	 * @param game   The game the agent will be playing.
 	 * @param iAmRed True if the agent is Red, False if the agent is Yellow.
 	 */
-	public MyAgent(Connect4Game game, boolean iAmRed) {
+	public KeyBoardAgent(Connect4Game game, boolean iAmRed) {
 		super(game, iAmRed);
 		random = new Random();
+		random = new Random();
+		scanner = new Scanner(System.in);
 		moveNumber = 0;
 	}
 
@@ -52,29 +55,11 @@ public class MyAgent extends Agent {
 	 *
 	 */
 	public void move() {
+		System.out.println("Enter a column to move at (0-6)");
+		int currentMove = scanner.nextInt();
+		moveOnColumn(currentMove);
 
-		int iCanWinColumn = iCanWin();
-		if (iCanWinColumn != -1) {
-			moveOnColumn(iCanWinColumn);
-		} else if (theyCanWin() != -1) {
-			moveOnColumn(theyCanWin());
-		} else {
-			// my first move
-			if (moveNumber < 2) {
-				moveOnColumn(3);
-			} else {
-				if (checkForTwo() != -1) {
-					moveOnColumn(checkForTwo());
-				} else {
-					moveOnColumn(randomMove());
-					printGameBoard();
-
-				}
-			}
-		}
-		moveNumber++;
 	}
-
 	public void printGameBoard() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
@@ -94,48 +79,9 @@ public class MyAgent extends Agent {
 		System.out.println("-------------");
 	}
 
-	public int checkForTwo() {
-		Connect4Game copyGame = new Connect4Game(myGame);
-		char[][] boardMatrix = copyGame.getBoardMatrix();
-
-		for (int row = 0; row < copyGame.getColumnCount(); row++) {
-			for (int col = 0; col < copyGame.getRowCount(); col++) {
-				if (boardMatrix[col][row] != 'B') {
-					if (col + 3 < copyGame.getRowCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col + 1][row]
-								&& boardMatrix[col][row] == boardMatrix[col + 2][row]) {
-							return col;
-						}
-					}
-					if (row + 3 < copyGame.getColumnCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col][row + 1]
-								&& boardMatrix[col][row] == boardMatrix[col][row + 2]) {
-							return col;
-						}
-					}
-					if (row + 3 < copyGame.getColumnCount() && col + 3 < copyGame.getRowCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col + 1][row + 1]
-								&& boardMatrix[col][row] == boardMatrix[col + 2][row + 2]) {
-							return col;
-						}
-					}
-					if (row > 2 && col + 3 < copyGame.getRowCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col + 1][row - 1]
-								&& boardMatrix[col][row] == boardMatrix[col + 2][row - 2]) {
-							return col;
-						}
-					}
-
-				}
-			}
-		}
-
-		return -1;
-	}
-
 	private int findTwo() {
 		for (int i = 0; i < myGame.getColumnCount(); i++) {
-			if (checkForTwoWrong(i)) {
+			if (checkForTwo(i)) {
 				return i;
 			}
 		}
@@ -143,7 +89,7 @@ public class MyAgent extends Agent {
 
 	}
 
-	private boolean checkForTwoWrong(int columnNum) {
+	private boolean checkForTwo(int columnNum) {
 		Connect4Column currColumn = myGame.getColumn(columnNum);
 		int slotToBeFilledNum = getLowestEmptyIndex(currColumn);
 		if (slotToBeFilledNum == -1) {
@@ -270,7 +216,7 @@ public class MyAgent extends Agent {
 		for (int i = 0; i < myGame.getColumnCount(); i++) {
 			// create a copy of the game
 			Connect4Game copyGame = new Connect4Game(myGame);
-			MyAgent copyAgent = new MyAgent(copyGame, iAmRed);
+			KeyBoardAgent copyAgent = new KeyBoardAgent(copyGame, iAmRed);
 			if (!copyGame.getColumn(i).getIsFull()) {
 				copyAgent.moveOnColumn(i);
 				if ((copyGame.gameWon() == 'R' && iAmRed) || (copyGame.gameWon() == 'Y' && !iAmRed)) {
@@ -297,7 +243,7 @@ public class MyAgent extends Agent {
 		for (int i = 0; i < myGame.getColumnCount(); i++) {
 			// create copy of the game
 			Connect4Game copyGame = new Connect4Game(myGame);
-			MyAgent copyAgent = new MyAgent(copyGame, !iAmRed);
+			KeyBoardAgent copyAgent = new KeyBoardAgent(copyGame, !iAmRed);
 			if (!copyGame.getColumn(i).getIsFull()) {
 				copyAgent.moveOnColumn(i);
 				if ((copyGame.gameWon() == 'R' && !iAmRed) || (copyGame.gameWon() == 'Y' && iAmRed)) {

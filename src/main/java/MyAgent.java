@@ -52,14 +52,14 @@ public class MyAgent extends Agent {
 	 *
 	 */
 	public void move() {
-
+		System.out.println(moveNumber);
+		clearMoveCount();
 		int iCanWinColumn = iCanWin();
 		if (iCanWinColumn != -1) {
 			moveOnColumn(iCanWinColumn);
 		} else if (theyCanWin() != -1) {
 			moveOnColumn(theyCanWin());
 		} else {
-			// my first move
 			if (moveNumber < 2) {
 				moveOnColumn(3);
 			} else {
@@ -67,12 +67,37 @@ public class MyAgent extends Agent {
 					moveOnColumn(checkForTwo());
 				} else {
 					moveOnColumn(randomMove());
-					printGameBoard();
 
 				}
 			}
 		}
+		printGameBoard();
 		moveNumber++;
+	}
+
+	public void clearMoveCount() {
+		// Get board matrix
+		Connect4Game copyGame = new Connect4Game(myGame);
+		char[][] boardMatrix = copyGame.getBoardMatrix();
+		char color;
+		if (iAmRed == true) {
+			color = 'R';
+		} else {
+			color = 'Y';
+		}
+
+		// loop through all slots
+		for (int row = 0; row < copyGame.getRowCount(); row++) {
+			for (int col = 0; col < copyGame.getColumnCount(); col++) {
+				// if any slots have my color, don't reset
+				if (boardMatrix[row][col] == color) {
+					return;
+				}
+
+			}
+		}
+		// otherwise reset
+		moveNumber = 0;
 	}
 
 	public void printGameBoard() {
@@ -97,93 +122,36 @@ public class MyAgent extends Agent {
 	public int checkForTwo() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
-
-		for (int row = 0; row < copyGame.getColumnCount(); row++) {
-			for (int col = 0; col < copyGame.getRowCount(); col++) {
-				if (boardMatrix[col][row] != 'B') {
-					if (col + 3 < copyGame.getRowCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col + 1][row]
-								&& boardMatrix[col][row] == boardMatrix[col + 2][row]) {
-							return col;
-						}
-					}
-					if (row + 3 < copyGame.getColumnCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col][row + 1]
-								&& boardMatrix[col][row] == boardMatrix[col][row + 2]) {
-							return col;
-						}
-					}
-					if (row + 3 < copyGame.getColumnCount() && col + 3 < copyGame.getRowCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col + 1][row + 1]
-								&& boardMatrix[col][row] == boardMatrix[col + 2][row + 2]) {
-							return col;
-						}
-					}
-					if (row > 2 && col + 3 < copyGame.getRowCount()) {
-						if (boardMatrix[col][row] == boardMatrix[col + 1][row - 1]
-								&& boardMatrix[col][row] == boardMatrix[col + 2][row - 2]) {
-							return col;
-						}
-					}
-
-				}
-			}
-		}
+		// check for two left
+		// check for two right
+		// check for two below
 
 		return -1;
 	}
 
-	private int findTwo() {
-		for (int i = 0; i < myGame.getColumnCount(); i++) {
-			if (checkForTwoWrong(i)) {
-				return i;
-			}
-		}
-		return -1;
-
-	}
-
-	private boolean checkForTwoWrong(int columnNum) {
-		Connect4Column currColumn = myGame.getColumn(columnNum);
-		int slotToBeFilledNum = getLowestEmptyIndex(currColumn);
-		if (slotToBeFilledNum == -1) {
-			return false;
+	public boolean checkForTwoLeft(char[][] thisBoardMatrix, int row, int col) {
+		char thisPiece = thisBoardMatrix[row][col];
+		if (thisPiece == thisBoardMatrix[row][col - 1] && thisPiece == thisBoardMatrix[row][col - 2]) {
+			return true;
 		} else {
-			boolean color = this.iAmRed;
-			// check two to the left and see if they are the same color
-			if (columnNum >= 2) {
-				Connect4Column columnLeft = myGame.getColumn(columnNum - 1);
-				Connect4Slot slotToLeft = columnLeft.getSlot(slotToBeFilledNum);
-				Connect4Column columnLeft2 = myGame.getColumn(columnNum - 2);
-				Connect4Slot slotToLeft2 = columnLeft2.getSlot(slotToBeFilledNum);
-				// System.out.println("cl " + columnLeft2);
-				// System.out.println("sl " + slotToLeft2);
-				// System.out.println("stbf " + slotToBeFilledNum);
-				if (!slotToLeft.getIsFilled() || !slotToLeft2.getIsFilled()) {
-					return false;
-				} else {
-					if ((color != slotToLeft.getIsRed()) || (color != slotToLeft2.getIsRed())) {
-						return false;
-					} else {
-						return true;
-					}
-				}
-				// check two to the right and see if they are the same color
-			} else if (columnNum <= 4) {
-				Connect4Column columnRight = myGame.getColumn(columnNum + 1);
-				Connect4Slot slotToRight = columnRight.getSlot(slotToBeFilledNum);
-				Connect4Column columnRight2 = myGame.getColumn(columnNum + 2);
-				Connect4Slot slotToRight2 = columnRight2.getSlot(slotToBeFilledNum);
-				if (!slotToRight.getIsFilled() || !slotToRight2.getIsFilled()) {
-					return false;
-				} else {
-					if ((color != slotToRight.getIsRed()) || (color != slotToRight2.getIsRed())) {
-						return false;
-					} else {
-						return true;
-					}
-				}
-			}
+			return false;
+		}
+	}
+
+	public boolean checkForTwoRight(char[][] thisBoardMatrix, int row, int col) {
+		char thisPiece = thisBoardMatrix[row][col];
+		if (thisPiece == thisBoardMatrix[row][col + 1] && thisPiece == thisBoardMatrix[row][col + 2]) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean checkForTwoBelow(char[][] thisBoardMatrix, int row, int col) {
+		char thisPiece = thisBoardMatrix[row][col];
+		if(thisPiece == thisBoardMatrix[row - 1][col] && thisPiece == thisBoardMatrix[row - 2][col]) {
+			return true;
+		} else{
 			return false;
 		}
 	}

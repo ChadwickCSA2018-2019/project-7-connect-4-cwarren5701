@@ -239,6 +239,34 @@ public class MyAgentTest {
 		assertTrue(numberOfWins >= 45);
 	}
 
+	// Tests that the checkForTwo method works
+	@Test
+	public void testRedGetting3InARow() {
+		MyAgent redAgent = new MyAgent(game, true);
+		MyAgent yellowAgent = new MyAgent(game, false);
+		game.clearBoard();
+		redAgent.moveOnColumn(1);
+		yellowAgent.moveOnColumn(2);
+		redAgent.moveOnColumn(1);
+		yellowAgent.moveOnColumn(3);
+		assertTrue(redAgent.checkForTwo() == 1);
+	}
+	
+	// Tests that checkForTwo method works
+	@Test
+	public void testRedGetting3InARowFalse() {
+		MyAgent redAgent = new MyAgent(game, true);
+		MyAgent yellowAgent = new MyAgent(game, false);
+		game.clearBoard();
+		redAgent.moveOnColumn(1);
+		yellowAgent.moveOnColumn(2);
+		redAgent.moveOnColumn(1);
+		yellowAgent.moveOnColumn(3);
+		redAgent.moveOnColumn(4);
+		yellowAgent.moveOnColumn(1);
+		assertFalse(redAgent.checkForTwo() == 1);
+	}
+
 	// Tests you can win against a Random agent as Red
 	@Test
 	public void testYellowWinningRandomAgent() {

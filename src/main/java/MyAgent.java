@@ -52,27 +52,27 @@ public class MyAgent extends Agent {
 	 *
 	 */
 	public void move() {
-		System.out.println(moveNumber);
+		// System.out.println(moveNumber);
 		clearMoveCount();
 		int iCanWinColumn = iCanWin();
 		if (iCanWinColumn != -1) {
 			moveOnColumn(iCanWinColumn);
-		} else if (theyCanWin() != -1) {
+		} else if (theyCanWin() != -1 && theyCanWinIfIMoveHere() != theyCanWin()) {
 			moveOnColumn(theyCanWin());
-		} else if (checkForTwo() != -1) {
+		} else if (checkForTwo() != -1 && theyCanWinIfIMoveHere() != checkForTwo()) {
 			moveOnColumn(checkForTwo());
-		} else if (checkForOne() != -1) {
+		} else if (checkForOne() != -1 && theyCanWinIfIMoveHere() != checkForOne()) {
 			moveOnColumn(checkForOne());
-		} else if (checkThemForTwo() != -1) {
+		} else if (checkThemForTwo() != -1 && theyCanWinIfIMoveHere() != checkThemForTwo()) {
 			moveOnColumn(checkThemForTwo());
-		} else if (checkThemForOne() != -1) {
+		} else if (checkThemForOne() != -1 && theyCanWinIfIMoveHere() != checkThemForOne()) {
 			moveOnColumn(checkThemForOne());
-		} else if (moveNumber < 1) {
+		} else if (moveNumber < 1 && theyCanWinIfIMoveHere() != 3) {
 			moveOnColumn(3);
 		} else {
 			moveOnColumn(randomMove());
 		}
-		printGameBoard();
+		// printGameBoard();
 		moveNumber++;
 	}
 
@@ -372,6 +372,20 @@ public class MyAgent extends Agent {
 			if (!copyGame.getColumn(i).getIsFull()) {
 				copyAgent.moveOnColumn(i);
 				if ((copyGame.gameWon() == 'R' && iAmRed) || (copyGame.gameWon() == 'Y' && !iAmRed)) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
+	public int theyCanWinIfIMoveHere() {
+		for (int i = 0; i < myGame.getColumnCount(); i++) {
+			Connect4Game copyGame = new Connect4Game(myGame);
+			MyAgent copyAgent = new MyAgent(copyGame, iAmRed);
+			if (!copyGame.getColumn(i).getIsFull()) {
+				copyAgent.moveOnColumn(i);
+				if (copyAgent.theyCanWin() != -1) {
 					return i;
 				}
 			}

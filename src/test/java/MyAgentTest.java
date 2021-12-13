@@ -299,10 +299,10 @@ public class MyAgentTest {
 		game.clearBoard();
 		redAgent.moveOnColumn(1);
 		yellowAgent.moveOnColumn(2);
-		assertTrue(redAgent.checkThemForOne() == 3);
+		assertEquals(3, redAgent.checkThemForOne());
 	}
 
-	// Tests you can win against a Random agent as Red
+	// Tests you can win against a Random agent as Yellow
 	@Test
 	public void testYellowWinningRandomAgent() {
 		Agent redAgent = new RandomAgent(game, true);
@@ -327,9 +327,146 @@ public class MyAgentTest {
 	}
 
 	// BONUS TODO: Write testCases to play against IntermediateAgent
+	// Tests you can win against an Intermediate as Red
+	@Test
+	public void testRedWinningIntermediateAgent() {
+		Agent redAgent = new MyAgent(game, true);
+		Agent yellowAgent = new IntermediateAgent(game, false);
+		int numberOfWins = 0;
+		for (int i = 0; i < NUM_OF_TEST_GAMES; i++) {
+			game.clearBoard();
+			while (!game.boardFull() && game.gameWon() == 'N') {
+				redAgent.move();
+				if (game.gameWon() != 'R' && !game.boardFull()) {
+					yellowAgent.move();
+				}
+			}
+		}
+
+		if (game.gameWon() == 'R') {
+			numberOfWins++;
+		}
+		System.out.println("You won: " + numberOfWins + " games as Red against Intermediate");
+		assertTrue(numberOfWins >= 45);
+	}
+
+	// Tests you can win against an Intermediate as Yellow
+	@Test
+	public void testYellowWinningIntermediateAgent() {
+		Agent redAgent = new IntermediateAgent(game, true);
+		Agent yellowAgent = new MyAgent(game, false);
+		int numberOfWins = 0;
+		for (int i = 0; i < NUM_OF_TEST_GAMES; i++) {
+			game.clearBoard();
+			while (!game.boardFull() && game.gameWon() == 'N') {
+				redAgent.move();
+				if (game.gameWon() != 'R' && !game.boardFull()) {
+					yellowAgent.move();
+				}
+			}
+
+			if (game.gameWon() == 'Y') {
+				numberOfWins++;
+			}
+		}
+		System.out.println("You won: " + numberOfWins + " games as Yellow against Intermediate");
+		// Test that you win over 90% of your games
+		assertTrue(numberOfWins >= 45);
+	}
 
 	// SUPER BONUS TODO: Write testCases to playAgainst AdvancedAgent
+	// Tests you can win against an Advanced as Red
+	@Test
+	public void testRedWinningAdvancedAgent() {
+		Agent redAgent = new MyAgent(game, true);
+		Agent yellowAgent = new AdvancedAgent(game, false);
+		int numberOfWins = 0;
+		for (int i = 0; i < NUM_OF_TEST_GAMES; i++) {
+			game.clearBoard();
+			while (!game.boardFull() && game.gameWon() == 'N') {
+				redAgent.move();
+				if (game.gameWon() != 'R' && !game.boardFull()) {
+					yellowAgent.move();
+				}
+			}
+		}
+
+		if (game.gameWon() == 'R') {
+			numberOfWins++;
+		}
+		System.out.println("You won: " + numberOfWins + " games as Red against Advanced");
+		assertTrue(numberOfWins >= 45);
+	}
+
+	// Tests you can win against an Advanced as Yellow
+	@Test
+	public void testYellowWinningAdvancedAgent() {
+		Agent redAgent = new AdvancedAgent(game, true);
+		Agent yellowAgent = new MyAgent(game, false);
+		int numberOfWins = 0;
+		for (int i = 0; i < NUM_OF_TEST_GAMES; i++) {
+			game.clearBoard();
+			while (!game.boardFull() && game.gameWon() == 'N') {
+				redAgent.move();
+				if (game.gameWon() != 'R' && !game.boardFull()) {
+					yellowAgent.move();
+				}
+			}
+
+			if (game.gameWon() == 'Y') {
+				numberOfWins++;
+			}
+		}
+		System.out.println("You won: " + numberOfWins + " games as Yellow against Advanced");
+		// Test that you win over 90% of your games
+		assertTrue(numberOfWins >= 45);
+	}
 
 	// SUPER BONUS TODO: Write testCases to playAgainst BrilliantAgent
+	// Tests you can win against an Brilliant as Red
+	@Test
+	public void testRedWinningBrilliantAgent() {
+		Agent redAgent = new MyAgent(game, true);
+		Agent yellowAgent = new BrilliantAgent(game, false);
+		int numberOfWins = 0;
+		for (int i = 0; i < NUM_OF_TEST_GAMES; i++) {
+			game.clearBoard();
+			while (!game.boardFull() && game.gameWon() == 'N') {
+				redAgent.move();
+				if (game.gameWon() != 'R' && !game.boardFull()) {
+					yellowAgent.move();
+				}
+			}
+		}
 
+		if (game.gameWon() == 'R') {
+			numberOfWins++;
+		}
+		System.out.println("You won: " + numberOfWins + " games as Red against Brilliant");
+		assertTrue(numberOfWins >= 45);
+	}
+
+	// Tests you can win against an Advanced as Yellow
+	@Test
+	public void testYellowWinningBrilliantAgent() {
+		Agent redAgent = new BrilliantAgent(game, true);
+		Agent yellowAgent = new MyAgent(game, false);
+		int numberOfWins = 0;
+		for (int i = 0; i < NUM_OF_TEST_GAMES; i++) {
+			game.clearBoard();
+			while (!game.boardFull() && game.gameWon() == 'N') {
+				redAgent.move();
+				if (game.gameWon() != 'R' && !game.boardFull()) {
+					yellowAgent.move();
+				}
+			}
+
+			if (game.gameWon() == 'Y') {
+				numberOfWins++;
+			}
+		}
+		System.out.println("You won: " + numberOfWins + " games as Yellow against Brilliant");
+		// Test that you win over 90% of your games
+		assertTrue(numberOfWins >= 45);
+	}
 }

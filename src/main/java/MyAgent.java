@@ -59,17 +59,18 @@ public class MyAgent extends Agent {
 			moveOnColumn(iCanWinColumn);
 		} else if (theyCanWin() != -1) {
 			moveOnColumn(theyCanWin());
+		} else if (checkForTwo() != -1) {
+			moveOnColumn(checkForTwo());
+		} else if (checkForOne() != -1) {
+			moveOnColumn(checkForOne());
+		} else if (checkThemForTwo() != -1) {
+			moveOnColumn(checkThemForTwo());
+		} else if (checkThemForOne() != -1) {
+			moveOnColumn(checkThemForOne());
+		} else if (moveNumber < 1) {
+			moveOnColumn(3);
 		} else {
-			if (moveNumber < 2) {
-				moveOnColumn(3);
-			} else {
-				if (checkForTwo() != -1) {
-					moveOnColumn(checkForTwo());
-				} else {
-					moveOnColumn(randomMove());
-
-				}
-			}
+			moveOnColumn(randomMove());
 		}
 		printGameBoard();
 		moveNumber++;
@@ -122,38 +123,167 @@ public class MyAgent extends Agent {
 	public int checkForTwo() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
-		// check for two left
-		// check for two right
-		// check for two below
+		char color = ' ';
+		if (iAmRed == true) {
+			color = 'R';
+		} else {
+			color = 'Y';
+		}
+		for (int row = 0; row < copyGame.getRowCount(); row++) {
+			for (int col = 0; col < copyGame.getColumnCount(); col++) {
+				if (boardMatrix[row][col] == 'B') {
+					if (checkForTwoLeft(boardMatrix, row, col, color) == true
+							|| checkForTwoRight(boardMatrix, row, col, color) == true
+							|| checkForTwoBelow(boardMatrix, row, col, color) == true) {
+						return col;
+					}
+				}
+			}
+		}
 
 		return -1;
 	}
 
-	public boolean checkForTwoLeft(char[][] thisBoardMatrix, int row, int col) {
-		char thisPiece = thisBoardMatrix[row][col];
-		if (thisPiece == thisBoardMatrix[row][col - 1] && thisPiece == thisBoardMatrix[row][col - 2]) {
-			return true;
+	public boolean checkForTwoLeft(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
+		if (thisCol > 1) {
+			if (color == thisBoardMatrix[thisRow][thisCol - 1] && color == thisBoardMatrix[thisRow][thisCol - 2]) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
 	}
 
-	public boolean checkForTwoRight(char[][] thisBoardMatrix, int row, int col) {
-		char thisPiece = thisBoardMatrix[row][col];
-		if (thisPiece == thisBoardMatrix[row][col + 1] && thisPiece == thisBoardMatrix[row][col + 2]) {
-			return true;
+	public boolean checkForTwoRight(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
+		if (thisCol < 5) {
+			if (color == thisBoardMatrix[thisRow][thisCol + 1] && color == thisBoardMatrix[thisRow][thisCol + 2]) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
 	}
 
-	public boolean checkForTwoBelow(char[][] thisBoardMatrix, int row, int col) {
-		char thisPiece = thisBoardMatrix[row][col];
-		if(thisPiece == thisBoardMatrix[row - 1][col] && thisPiece == thisBoardMatrix[row - 2][col]) {
-			return true;
-		} else{
+	public boolean checkForTwoBelow(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
+		if (thisRow < 4) {
+			if (color == thisBoardMatrix[thisRow + 1][thisCol] && color == thisBoardMatrix[thisRow + 2][thisCol]) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
 			return false;
 		}
+	}
+
+	public int checkForOne() {
+		Connect4Game copyGame = new Connect4Game(myGame);
+		char[][] boardMatrix = copyGame.getBoardMatrix();
+		char color = ' ';
+		if (iAmRed == true) {
+			color = 'R';
+		} else {
+			color = 'Y';
+		}
+		for (int row = 0; row < copyGame.getRowCount(); row++) {
+			for (int col = 0; col < copyGame.getColumnCount(); col++) {
+				if (boardMatrix[row][col] == 'B') {
+					if (checkForOneLeft(boardMatrix, row, col, color) == true
+							|| checkForOneRight(boardMatrix, row, col, color) == true
+							|| checkForOneBelow(boardMatrix, row, col, color) == true) {
+						return col;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	public int checkThemForOne() {
+		Connect4Game copyGame = new Connect4Game(myGame);
+		char[][] boardMatrix = copyGame.getBoardMatrix();
+		char color = ' ';
+		if (iAmRed == true) {
+			color = 'Y';
+		} else {
+			color = 'R';
+		}
+		for (int row = 0; row < copyGame.getRowCount(); row++) {
+			for (int col = 0; col < copyGame.getColumnCount(); col++) {
+				if (boardMatrix[row][col] == 'B') {
+					if (checkForOneLeft(boardMatrix, row, col, color) == true
+							|| checkForOneRight(boardMatrix, row, col, color) == true
+							|| checkForOneBelow(boardMatrix, row, col, color) == true) {
+						return col;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	public boolean checkForOneLeft(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
+		if (thisCol > 0) {
+			if (color == thisBoardMatrix[thisRow][thisCol - 1]) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public boolean checkForOneRight(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
+		if (thisCol < 6) {
+			if (color == thisBoardMatrix[thisRow][thisCol + 1]) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public boolean checkForOneBelow(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
+		if (thisRow < 5) {
+			if (color == thisBoardMatrix[thisRow + 1][thisCol]) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	public int checkThemForTwo() {
+		Connect4Game copyGame = new Connect4Game(myGame);
+		char[][] boardMatrix = copyGame.getBoardMatrix();
+		char color = ' ';
+		if (iAmRed == true) {
+			color = 'Y';
+		} else {
+			color = 'R';
+		}
+		for (int row = 0; row < copyGame.getRowCount(); row++) {
+			for (int col = 0; col < copyGame.getColumnCount(); col++) {
+				if (boardMatrix[row][col] == 'B') {
+					if (checkForTwoLeft(boardMatrix, row, col, color) == true
+							|| checkForTwoRight(boardMatrix, row, col, color) == true
+							|| checkForTwoBelow(boardMatrix, row, col, color) == true) {
+						return col;
+					}
+				}
+			}
+		}
+
+		return -1;
 	}
 
 	private int getHighestFilledRed(int columnNum) {

@@ -1,9 +1,18 @@
 import java.util.Random;
 
 /**
- * Describe your basic strategy here.
+ * My move method is structured to go through a series of checks and if all
+ * those are false, and the move number greater than 1, the agent makes a random
+ * move. First, the agent checks for any moves that it can make to win or any
+ * moves than it can make to block the other player from winning. Then, my agent
+ * looks for moves to make in order to get 3 in a row or block them from getting
+ * three in a row. Next, my agent looks for moves to make in order to get 2 in a
+ * row or block them from getting 2 in a row. Usually, because there are not
+ * many pieces on the board, the agent places its first piece in the middle
+ * column. Lastly, at each check, a piece is only placed there if the opponent
+ * cannot win with one move following the move my agent is about to make.
  * 
- * @author <your Github username>
+ * @author <cwarren5701>
  *
  */
 public class MyAgent extends Agent {
@@ -57,17 +66,17 @@ public class MyAgent extends Agent {
 		int iCanWinColumn = iCanWin();
 		if (iCanWinColumn != -1) {
 			moveOnColumn(iCanWinColumn);
-		} else if (theyCanWin() != -1 && theyCanWinIfIMoveHere() != theyCanWin()) {
+		} else if (theyCanWin() != -1 && !theyCanWinIfIMoveHere(theyCanWin())) {
 			moveOnColumn(theyCanWin());
-		} else if (checkForTwo() != -1 && theyCanWinIfIMoveHere() != checkForTwo()) {
+		} else if (checkForTwo() != -1 && !theyCanWinIfIMoveHere(checkForTwo())) {
 			moveOnColumn(checkForTwo());
-		} else if (checkForOne() != -1 && theyCanWinIfIMoveHere() != checkForOne()) {
+		} else if (checkForOne() != -1 && !theyCanWinIfIMoveHere(checkForOne())) {
 			moveOnColumn(checkForOne());
-		} else if (checkThemForTwo() != -1 && theyCanWinIfIMoveHere() != checkThemForTwo()) {
+		} else if (checkThemForTwo() != -1 && !theyCanWinIfIMoveHere(checkThemForTwo())) {
 			moveOnColumn(checkThemForTwo());
-		} else if (checkThemForOne() != -1 && theyCanWinIfIMoveHere() != checkThemForOne()) {
+		} else if (checkThemForOne() != -1 && !theyCanWinIfIMoveHere(checkThemForOne())) {
 			moveOnColumn(checkThemForOne());
-		} else if (moveNumber < 1 && theyCanWinIfIMoveHere() != 3) {
+		} else if (moveNumber < 1 && !theyCanWinIfIMoveHere(3)) {
 			moveOnColumn(3);
 		} else {
 			moveOnColumn(randomMove());
@@ -76,6 +85,10 @@ public class MyAgent extends Agent {
 		moveNumber++;
 	}
 
+	/**
+	 * Resets the int moveNumber by looping through the board and looking for any
+	 * slots with my color.
+	 */
 	public void clearMoveCount() {
 		// Get board matrix
 		Connect4Game copyGame = new Connect4Game(myGame);
@@ -101,6 +114,9 @@ public class MyAgent extends Agent {
 		moveNumber = 0;
 	}
 
+	/**
+	 * Prints the game board as it appears in a 2D array to the console.
+	 */
 	public void printGameBoard() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
@@ -120,6 +136,12 @@ public class MyAgent extends Agent {
 		System.out.println("-------------");
 	}
 
+	/**
+	 * Checks the board for two in a row of my color, and returns the column that I
+	 * can place in to get three in a row.
+	 * 
+	 * @return a column number.
+	 */
 	public int checkForTwo() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
@@ -144,6 +166,16 @@ public class MyAgent extends Agent {
 		return -1;
 	}
 
+	/**
+	 * Returns <code>true</code> if both slots to the left are the same color.
+	 * 
+	 * @param thisBoardMatrix the board matrix.
+	 * @param thisRow         the row number.
+	 * @param thisCol         the column number.
+	 * @param color           the color of the agent.
+	 * @return <code>true</code> if both slots to the left are the same color;
+	 *         <code>false</code> otherwise
+	 */
 	public boolean checkForTwoLeft(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
 		if (thisCol > 1) {
 			if (color == thisBoardMatrix[thisRow][thisCol - 1] && color == thisBoardMatrix[thisRow][thisCol - 2]) {
@@ -156,6 +188,16 @@ public class MyAgent extends Agent {
 		}
 	}
 
+	/**
+	 * Returns <code>true</code> if both slots to the right are the same color.
+	 * 
+	 * @param thisBoardMatrix the board matrix.
+	 * @param thisRow         the row number.
+	 * @param thisCol         the column number.
+	 * @param color           the color of the agent.
+	 * @return <code>true</code> if both slots to the right are the same color;
+	 *         <code>false</code> otherwise
+	 */
 	public boolean checkForTwoRight(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
 		if (thisCol < 5) {
 			if (color == thisBoardMatrix[thisRow][thisCol + 1] && color == thisBoardMatrix[thisRow][thisCol + 2]) {
@@ -168,6 +210,16 @@ public class MyAgent extends Agent {
 		}
 	}
 
+	/**
+	 * Returns <code>true</code> if both slots below are the same color.
+	 * 
+	 * @param thisBoardMatrix the board matrix.
+	 * @param thisRow         the row number.
+	 * @param thisCol         the column number.
+	 * @param color           the color of the agent.
+	 * @return <code>true</code> if both slots below are the same color;
+	 *         <code>false</code> otherwise
+	 */
 	public boolean checkForTwoBelow(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
 		if (thisRow < 4) {
 			if (color == thisBoardMatrix[thisRow + 1][thisCol] && color == thisBoardMatrix[thisRow + 2][thisCol]) {
@@ -180,6 +232,12 @@ public class MyAgent extends Agent {
 		}
 	}
 
+	/**
+	 * Checks the board for one of my color, and returns the column that I can place
+	 * in to get two in a row.
+	 * 
+	 * @return a column number.
+	 */
 	public int checkForOne() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
@@ -203,6 +261,12 @@ public class MyAgent extends Agent {
 		return -1;
 	}
 
+	/**
+	 * Checks the board for one of their color, and returns the column that they can
+	 * place in to get two in a row.
+	 * 
+	 * @return a column number.
+	 */
 	public int checkThemForOne() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
@@ -226,6 +290,16 @@ public class MyAgent extends Agent {
 		return -1;
 	}
 
+	/**
+	 * Returns <code>true</code> if one slot to the left is the same color.
+	 * 
+	 * @param thisBoardMatrix the board matrix.
+	 * @param thisRow         the row number.
+	 * @param thisCol         the column number.
+	 * @param color           the color of the agent.
+	 * @return <code>true</code> if one slot to the left is the same color;
+	 *         <code>false</code> otherwise
+	 */
 	public boolean checkForOneLeft(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
 		if (thisCol > 0) {
 			if (color == thisBoardMatrix[thisRow][thisCol - 1]) {
@@ -238,6 +312,16 @@ public class MyAgent extends Agent {
 		}
 	}
 
+	/**
+	 * Returns <code>true</code> if one slot to the right is the same color.
+	 * 
+	 * @param thisBoardMatrix the board matrix.
+	 * @param thisRow         the row number.
+	 * @param thisCol         the column number.
+	 * @param color           the color of the agent.
+	 * @return <code>true</code> if one slot to the right is the same color;
+	 *         <code>false</code> otherwise
+	 */
 	public boolean checkForOneRight(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
 		if (thisCol < 6) {
 			if (color == thisBoardMatrix[thisRow][thisCol + 1]) {
@@ -250,6 +334,16 @@ public class MyAgent extends Agent {
 		}
 	}
 
+	/**
+	 * Returns <code>true</code> if one slot below is the same color.
+	 * 
+	 * @param thisBoardMatrix the board matrix.
+	 * @param thisRow         the row number.
+	 * @param thisCol         the column number.
+	 * @param color           the color of the agent.
+	 * @return <code>true</code> if one slot below is the same color;
+	 *         <code>false</code> otherwise
+	 */
 	public boolean checkForOneBelow(char[][] thisBoardMatrix, int thisRow, int thisCol, char color) {
 		if (thisRow < 5) {
 			if (color == thisBoardMatrix[thisRow + 1][thisCol]) {
@@ -262,6 +356,12 @@ public class MyAgent extends Agent {
 		}
 	}
 
+	/**
+	 * Checks the board for two in a row of their color, and returns the column that
+	 * they can place in to get three in a row.
+	 * 
+	 * @return a column number.
+	 */
 	public int checkThemForTwo() {
 		Connect4Game copyGame = new Connect4Game(myGame);
 		char[][] boardMatrix = copyGame.getBoardMatrix();
@@ -280,18 +380,6 @@ public class MyAgent extends Agent {
 						return col;
 					}
 				}
-			}
-		}
-
-		return -1;
-	}
-
-	private int getHighestFilledRed(int columnNum) {
-		Connect4Column column = myGame.getColumn(columnNum);
-		for (int i = 0; i < column.getRowCount(); i++) {
-			Connect4Slot currSlot = column.getSlot(i);
-			if (currSlot.getIsFilled() && currSlot.getIsRed()) {
-				return i;
 			}
 		}
 
@@ -379,18 +467,23 @@ public class MyAgent extends Agent {
 		return -1;
 	}
 
-	public int theyCanWinIfIMoveHere() {
-		for (int i = 0; i < myGame.getColumnCount(); i++) {
-			Connect4Game copyGame = new Connect4Game(myGame);
-			MyAgent copyAgent = new MyAgent(copyGame, iAmRed);
-			if (!copyGame.getColumn(i).getIsFull()) {
-				copyAgent.moveOnColumn(i);
-				if (copyAgent.theyCanWin() != -1) {
-					return i;
-				}
+	/**
+	 * Returns <code>true</code> if they can win if I move in the given column.
+	 * 
+	 * @param col the column number.
+	 * @return <code>true</code> if they can win if I move in the given column;
+	 *         <code>false</code> otherwise
+	 */
+	public boolean theyCanWinIfIMoveHere(int col) {
+		Connect4Game copyGame = new Connect4Game(myGame);
+		MyAgent copyAgent = new MyAgent(copyGame, iAmRed);
+		if (!copyGame.getColumn(col).getIsFull()) {
+			copyAgent.moveOnColumn(col);
+			if (copyAgent.theyCanWin() != -1) {
+				return true;
 			}
 		}
-		return -1;
+		return false;
 	}
 
 	/**

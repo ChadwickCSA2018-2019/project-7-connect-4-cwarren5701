@@ -341,10 +341,10 @@ public class MyAgentTest {
 					yellowAgent.move();
 				}
 			}
-		}
 
-		if (game.gameWon() == 'R') {
-			numberOfWins++;
+			if (game.gameWon() == 'R') {
+				numberOfWins++;
+			}
 		}
 		System.out.println("You won: " + numberOfWins + " games as Red against Intermediate");
 		assertTrue(numberOfWins >= 45);
@@ -389,11 +389,13 @@ public class MyAgentTest {
 					yellowAgent.move();
 				}
 			}
+			// System.out.println("Game won: " + game.gameWon());
+
+			if (game.gameWon() == 'R') {
+				numberOfWins++;
+			}
 		}
 
-		if (game.gameWon() == 'R') {
-			numberOfWins++;
-		}
 		System.out.println("You won: " + numberOfWins + " games as Red against Advanced");
 		assertTrue(numberOfWins >= 45);
 	}
@@ -437,10 +439,10 @@ public class MyAgentTest {
 					yellowAgent.move();
 				}
 			}
-		}
 
-		if (game.gameWon() == 'R') {
-			numberOfWins++;
+			if (game.gameWon() == 'R') {
+				numberOfWins++;
+			}
 		}
 		System.out.println("You won: " + numberOfWins + " games as Red against Brilliant");
 		assertTrue(numberOfWins >= 45);
